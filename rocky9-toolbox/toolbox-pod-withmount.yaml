@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  namespace: default  # namespace where the pvc's exist
+  name: rocky9-toolbox
+spec:
+  template:
+    metadata:
+      name: rocky9-toolbox
+      labels:
+        name: rocky9-toolbox
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: toolbox
+          image: jbournepers/rocky9-toolbox:1.5
+          tty: true
+          command: [ "/bin/sleep" ]
+          args: [ "30d" ]
+          volumeMounts:
+          - name: tgtvol
+            mountPath: /tgt
+      volumes:
+      - name: tgtvol
+        persistentVolumeClaim:
+          claimName: your-pvc
